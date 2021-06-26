@@ -5,6 +5,7 @@ import com.example.gwanggo.domain.tag.TagDto;
 import com.example.gwanggo.domain.user.dto.UserDto;
 import com.example.gwanggo.domain.user.service.UserService;
 import com.example.gwanggo.domain.user.entity.User;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ public class UserController {
     }
 
 
+    @ApiOperation(value = "회원가입", notes = "이메일, 비밀번호, 성별 여부를 기입합니다")
     @PostMapping("/signup")
     public ResponseEntity<User> signup(
             @Valid @RequestBody UserDto userDto
@@ -45,12 +47,12 @@ public class UserController {
     }
 
 
-
+    @ApiOperation(value = "태그 설정", notes = "유저가 선택한 태그리스트를 설정합니다")
     @PostMapping("/tag")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<Void> addTag(@RequestBody List<TagDto> tagList){
-        Long userId = userService.getMyUserWithAuthorities().get().getUserId();
-        userService.saveUserTag(tagList, userId);
+    public ResponseEntity<Void> addTag(@RequestBody List<TagDto> tagDtoList){
+        User user = userService.getMyUserWithAuthorities().get();
+        userService.saveUserTag(tagDtoList, user);
 
         return  ResponseEntity.status(HttpStatus.OK).build();
     }

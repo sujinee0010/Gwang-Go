@@ -14,10 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -73,15 +73,14 @@ public class UserService {
 
 
     @Transactional
-    public void saveUserTag(List<TagDto> tagList, Long userId){
-        List<UserTag> userTags = new ArrayList<>();
-        for(TagDto tagDto : tagList){
-           userTags.add(
-                   UserTag.builder()
-                   .tag(tagRepository.findById(tagDto.getTagId()).get())
-                   .user(userRepository.findById(userId).get())
-                   .build());
-        }
+    public void saveUserTag(List<TagDto> tagDtoList, User user){
+
+        List<UserTag> userTags = tagDtoList.stream()
+                                            .map(tagDto -> UserTag.builder()
+                                            .tag(tagDto.toEntity())
+                                            .user(user).build())
+                                            .collect(Collectors.toList());
+
 
         userTagRepository.saveAll(userTags);
 

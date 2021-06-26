@@ -4,6 +4,7 @@ import com.example.gwanggo.domain.user.dto.LoginDto;
 import com.example.gwanggo.domain.user.dto.TokenDto;
 import com.example.gwanggo.domain.user.jwt.JwtFilter;
 import com.example.gwanggo.domain.user.jwt.TokenProvider;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +30,7 @@ public class AuthController {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
     }
 
-    // TODO : 로그인
+    @ApiOperation(value = "회원 로그인", notes = "로그인을 통해 JWT 토큰을 발급 받습니다")
     @PostMapping("/authenticate")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
 
